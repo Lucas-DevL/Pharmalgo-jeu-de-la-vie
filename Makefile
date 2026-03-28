@@ -8,11 +8,11 @@
 TARGET = challenge
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17
-INCLUDES = -ILib_Croix -Ilibcroix/WiringPi/wiringPi
-LDFLAGS = -Llibcroix/WiringPi/wiringPi -Wl,-rpath,'$$ORIGIN/libcroix/WiringPi/wiringPi'
+INCLUDES = -ILib_Croix -IWiringPi/wiringPi
+LDFLAGS = -LWiringPi/wiringPi -Wl,-rpath,'$$ORIGIN/WiringPi/wiringPi'
 LDLIBS = -lwiringPi
-WIRINGPI_LIB_VERSIONED = libcroix/WiringPi/wiringPi/libwiringPi.so.3.18
-WIRINGPI_LIB = libcroix/WiringPi/wiringPi/libwiringPi.so
+WIRINGPI_LIB_VERSIONED = WiringPi/wiringPi/libwiringPi.so.3.18
+WIRINGPI_LIB = WiringPi/wiringPi/libwiringPi.so
 
 SRC = \
 	main.cpp \
