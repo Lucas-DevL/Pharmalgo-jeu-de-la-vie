@@ -168,6 +168,25 @@ void write_grid_to_hardware(CroixPharma *croix, const Grid &grid)
     croix->writeBitmap(bitmap);
 }
 
+void show_startup_pattern(CroixPharma *croix)
+{
+    if (croix == nullptr) {
+        return;
+    }
+
+    uint8_t bitmap[SIZE][SIZE] = {};
+    for (int y = 0; y < kGridSize; ++y) {
+        for (int x = 0; x < kGridSize; ++x) {
+            if (is_drawable(y, x)) {
+                bitmap[y][x] = HIGH;
+            }
+        }
+    }
+
+    croix->writeBitmap(bitmap);
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+}
+
 void signal_handler(int)
 {
     g_running = false;
@@ -184,7 +203,7 @@ int main()
     CroixPharma *croix = nullptr;
     bool has_hardware = false;
 
-#ifdef __arm__
+#if defined(__arm__) || defined(__aarch64__)
     if (wiringPiSetupGpio() >= 0) {
         croix = new CroixPharma();
         croix->begin();
@@ -200,6 +219,10 @@ int main()
     }
 
     Grid grid = initialize_grid();
+
+    if (has_hardware) {
+        show_startup_pattern(croix);
+    }
 
     printf("Game of Life started. Press Ctrl+C to stop.\n");
     printf("Target speed: %d generations/sec\n", kFrameRate);
