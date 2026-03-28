@@ -203,19 +203,16 @@ int main()
     CroixPharma *croix = nullptr;
     bool has_hardware = false;
 
-#if defined(__arm__) || defined(__aarch64__)
     if (wiringPiSetupGpio() >= 0) {
         croix = new CroixPharma();
         croix->begin();
         croix->setSide(CroixPharma::BOTH);
         has_hardware = true;
-    }
-#endif
-
-    if (has_hardware) {
         printf("Hardware mode enabled (Lib_Croix).\n");
     } else {
-        printf("Simulator mode enabled (UDP to sim.py).\n");
+        fprintf(stderr, "ERROR: wiringPiSetupGpio failed, cross hardware not initialized.\n");
+        fprintf(stderr, "Check GPIO access (sudo) and wiring.\n");
+        return 1;
     }
 
     Grid grid = initialize_grid();
