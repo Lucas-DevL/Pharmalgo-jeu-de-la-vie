@@ -11,6 +11,8 @@ CXXFLAGS = -Wall -Wextra -std=c++17
 INCLUDES = -ILib_Croix -Ilibcroix/WiringPi/wiringPi
 LDFLAGS = -Llibcroix/WiringPi/wiringPi -Wl,-rpath,'$$ORIGIN/libcroix/WiringPi/wiringPi'
 LDLIBS = -lwiringPi
+WIRINGPI_LIB_VERSIONED = libcroix/WiringPi/wiringPi/libwiringPi.so.3.18
+WIRINGPI_LIB = libcroix/WiringPi/wiringPi/libwiringPi.so
 
 SRC = \
 	main.cpp \
@@ -18,8 +20,11 @@ SRC = \
 
 all: $(TARGET)
 
-$(TARGET): $(SRC)
+$(TARGET): $(SRC) $(WIRINGPI_LIB)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SRC) $(LDFLAGS) $(LDLIBS) -o $(TARGET)
+
+$(WIRINGPI_LIB): $(WIRINGPI_LIB_VERSIONED)
+	ln -sf libwiringPi.so.3.18 $(WIRINGPI_LIB)
 
 clean:
 	rm -f $(TARGET)
